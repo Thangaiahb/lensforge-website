@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us — LensForge Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+/* ABOUT PAGE STYLES */
+.about-hero { min-height: 70vh; display: flex; align-items: center; padding: 160px 60px 80px; border-bottom: 1px solid rgba(255,255,255,.06); background: var(--black); }
+.about-hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; width: 100%; }
+.about-hero-left h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(44px,6vw,84px); font-weight: 300; line-height: 1.0; }
+.about-hero-left h1 em { font-style: italic; color: var(--gold); }
+.about-hero-right p { font-family: 'Cormorant Garamond', serif; font-size: 21px; line-height: 1.8; color: var(--muted); }
+.about-hero-right p + p { margin-top: 24px; }
+
+/* STORY GRID */
+.story-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 0; padding: 100px 60px; border-bottom: 1px solid rgba(255,255,255,.06); }
+.story-left { padding-right: 80px; }
+.big-num { font-family: 'Cormorant Garamond', serif; font-size: 180px; font-weight: 300; line-height: .9; color: transparent; -webkit-text-stroke: 1px rgba(201,168,76,.18); margin-bottom: -20px; }
+.story-left h2 { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 300; margin-bottom: 28px; line-height: 1.2; }
+.story-left h2 em { font-style: italic; color: var(--gold); }
+.story-left p { font-family: 'Cormorant Garamond', serif; font-size: 19px; line-height: 1.8; color: var(--muted); margin-bottom: 20px; }
+.story-right { border-left: 1px solid rgba(255,255,255,.06); padding-left: 60px; }
+.team-card { padding: 32px 0; border-bottom: 1px solid rgba(255,255,255,.06); }
+.team-card:last-child { border: none; }
+.team-avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--card); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; border: 1px solid rgba(201,168,76,.2); }
+.team-card h4 { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.team-card span { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+
+/* SKILLS */
+.skills-section { padding: 100px 60px; background: var(--dark); }
+.skills-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; margin-top: 48px; }
+.skill-item { background: var(--card); padding: 36px 28px; border: 1px solid rgba(255,255,255,.04); text-align: center; transition: all .3s; }
+.skill-item:hover { border-color: var(--gold-dim); transform: translateY(-4px); }
+.skill-icon { font-size: 32px; margin-bottom: 16px; }
+.skill-item h4 { font-family: 'Syne', sans-serif; font-size: 15px; margin-bottom: 10px; }
+.skill-item p { font-family: 'Cormorant Garamond', serif; font-size: 15px; color: var(--muted); line-height: 1.6; }
+
+/* NUMBERS */
+.numbers-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; border-top: 1px solid rgba(255,255,255,.06); }
+.num-box { padding: 60px 40px; text-align: center; border-right: 1px solid rgba(255,255,255,.06); }
+.num-box:last-child { border: none; }
+.num-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 64px; font-weight: 300; color: var(--gold); }
+.num-box p { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-top: 8px; }
+
+@media(max-width:900px){
+  .about-hero { padding: 140px 24px 60px; }
+  .about-hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .story-grid { grid-template-columns: 1fr; padding: 60px 24px; }
+  .story-left { padding-right: 0; margin-bottom: 40px; }
+  .story-right { border-left: none; border-top: 1px solid rgba(255,255,255,.06); padding-left: 0; padding-top: 40px; }
+  .big-num { font-size: 100px; }
+  .skills-section { padding: 80px 24px; }
+  .skills-grid { grid-template-columns: repeat(2,1fr); }
+  .numbers-strip { grid-template-columns: repeat(2,1fr); }
+  .num-box { border-bottom: 1px solid rgba(255,255,255,.06); }
+}
+@media(max-width:480px){
+  .skills-grid { grid-template-columns: 1fr; }
+  .numbers-strip { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div class="loader" id="loader">
+  <div class="loader-logo">Lens<span>Forge</span></div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursorFollower"></div>
+
+<!-- WHATSAPP FLOAT -->
+<a class="wa-float" href="https://wa.me/919876543210?text=Hi%20LensForge!%20I%20want%20to%20discuss%20a%20project." target="_blank" aria-label="Chat on WhatsApp">
+  <div class="wa-circle">
+    <div class="wa-pulse"></div>
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </div>
+  <div class="wa-label">Chat with us!</div>
+</a>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="index.html" class="logo">Lens<span>Forge</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="work.html">Work</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta">Get a Quote</a>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="about-hero">
+  <div class="about-hero-grid">
+    <div class="about-hero-left">
+      <div class="section-tag">Our Story</div>
+      <h1>We See the<br><em>World</em><br>Differently</h1>
+    </div>
+    <div class="about-hero-right">
+      <p>LensForge was born from a simple obsession: that every brand has a story worth telling beautifully. We blend the precision of a camera with the strategy of a marketing firm.</p>
+      <p>Based in Chennai, we serve clients across India — from bootstrapped startups to enterprise brands. Our work sits at the intersection of art and commerce.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NUMBERS STRIP -->
+<div class="numbers-strip">
+  <div class="num-box reveal"><h3>320+</h3><p>Projects Completed</p></div>
+  <div class="num-box reveal reveal-delay-1"><h3>8+</h3><p>Years of Excellence</p></div>
+  <div class="num-box reveal reveal-delay-2"><h3>94%</h3><p>Client Retention Rate</p></div>
+  <div class="num-box reveal reveal-delay-3"><h3>14</h3><p>Team Specialists</p></div>
+</div>
+
+<!-- STORY -->
+<div class="story-grid">
+  <div class="story-left reveal">
+    <div class="big-num">08</div>
+    <h2>Eight Years of<br><em>Visual Excellence</em></h2>
+    <p>Started in 2017 as a two-person photography studio, LensForge has grown into a full-service visual marketing powerhouse with a team of 14 specialists.</p>
+    <p>We've worked with over 320 brands across FMCG, fashion, tech, real estate, food & beverage, and luxury sectors. Every project gets the same relentless attention to detail.</p>
+    <p>Our philosophy: great visuals without great strategy is art. Great strategy without great visuals is noise. We deliver both — together.</p>
+    <br>
+    <a href="work.html" class="btn-primary" style="margin-top:8px;">See Our Work</a>
+  </div>
+  <div class="story-right reveal reveal-delay-2">
+    <div class="section-tag" style="margin-bottom:32px;">The Team</div>
+    <div class="team-card">
+      <div class="team-avatar">👨‍🎨</div>
+      <h4>Arjun Krishnamurthy</h4>
+      <span>Founder & Creative Director</span>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">👩‍💼</div>
+      <h4>Priya Venkatesh</h4>
+      <span>Head of Marketing Strategy</span>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">🎬</div>
+      <h4>Rohan Subramaniam</h4>
+      <span>Lead Cinematographer</span>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">📊</div>
+      <h4>Sneha Pillai</h4>
+      <span>Performance Marketing Lead</span>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<div class="skills-section">
+  <div class="section-tag reveal">Our Capabilities</div>
+  <h2 class="section-title reveal reveal-delay-1">What We <em>Bring</em> to the Table</h2>
+  <div class="skills-grid">
+    <div class="skill-item reveal reveal-delay-1"><div class="skill-icon">🎞</div><h4>Cinema-grade Equipment</h4><p>Sony FX6, RED cameras, professional lighting rigs and drones for aerial work.</p></div>
+    <div class="skill-item reveal reveal-delay-2"><div class="skill-icon">🧠</div><h4>Data-Driven Strategy</h4><p>Every creative decision backed by audience analytics, A/B tests, and performance benchmarks.</p></div>
+    <div class="skill-item reveal reveal-delay-3"><div class="skill-icon">⚡</div><h4>Fast Turnaround</h4><p>Rush-delivery options available. Standard projects delivered within agreed timelines, always.</p></div>
+    <div class="skill-item reveal reveal-delay-1"><div class="skill-icon">🤝</div><h4>Long-term Partnership</h4><p>We don't just do projects. We embed as your visual brand partner for consistent results.</p></div>
+    <div class="skill-item reveal reveal-delay-2"><div class="skill-icon">🌍</div><h4>Multi-Platform Expertise</h4><p>Instagram, YouTube, OTT, print — we optimise content for every platform and format.</p></div>
+    <div class="skill-item reveal reveal-delay-3"><div class="skill-icon">🏆</div><h4>Award-Winning Work</h4><p>Recognised by IAMAI, Kyoorius, and featured in Campaign India for creative excellence.</p></div>
+    <div class="skill-item reveal reveal-delay-1"><div class="skill-icon">🔊</div><h4>Full Audio Production</h4><p>In-house audio recording, voice-over, sound design and original music composition.</p></div>
+    <div class="skill-item reveal reveal-delay-2"><div class="skill-icon">🔄</div><h4>Unlimited Revisions</h4><p>We iterate until the final output is exactly right. Your satisfaction is non-negotiable.</p></div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-strip">
+  <div>
+    <p class="cta-strip-sub">Ready to work together?</p>
+    <h2>Let's Build Your Brand<br><em>Story Together</em></h2>
+  </div>
+  <a href="contact.html" class="btn-primary" style="background:var(--black);color:var(--white);flex-shrink:0;">Start a Conversation</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">Lens<span>Forge</span></a>
+      <p>Premium camera work & digital marketing studio crafting visual stories that move people and grow brands.</p>
+      <div class="social-links">
+        <a class="social-link">📸</a><a class="social-link">▶️</a><a class="social-link">💼</a><a class="social-link">🐦</a>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Services</h4><ul><li><a href="#">Photography</a></li><li><a href="#">Video Production</a></li><li><a href="#">Digital Marketing</a></li><li><a href="#">Brand Identity</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="about.html">About Us</a></li><li><a href="work.html">Our Work</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul><li><a href="mailto:hello@lensforge.in">hello@lensforge.in</a></li><li><a href="tel:+919876543210">+91 98765 43210</a></li><li><a href="#">Chennai, Tamil Nadu</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 LensForge Studio. All rights reserved.</p>
+    <p>Crafted with precision & passion</p>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('load',()=>{ setTimeout(()=>{ document.getElementById('loader').classList.add('gone'); initReveal(); },1800); });
+window.addEventListener('scroll',()=>{ document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60); });
+function toggleMenu(){ document.getElementById('navbar').classList.toggle('menu-open'); document.getElementById('hamburger').classList.toggle('open'); }
+const cursor=document.getElementById('cursor'), follower=document.getElementById('cursorFollower');
+let mx=0,my=0,fx=0,fy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function a(){cursor.style.left=mx+'px';cursor.style.top=my+'px';fx+=(mx-fx)*.12;fy+=(my-fy)*.12;follower.style.left=fx+'px';follower.style.top=fy+'px';requestAnimationFrame(a);})();
+document.querySelectorAll('a,button,.skill-item,.team-card').forEach(el=>{el.addEventListener('mouseenter',()=>{cursor.classList.add('hover');follower.classList.add('hover');});el.addEventListener('mouseleave',()=>{cursor.classList.remove('hover');follower.classList.remove('hover');});});
+function initReveal(){ const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.12}); document.querySelectorAll('.reveal').forEach(el=>{el.classList.remove('visible');obs.observe(el);}); }
+initReveal();
+</script>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LensForge — Camera & Marketing Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link rel="stylesheet" href="shared.css">
+<style>
+/* HOME-SPECIFIC */
+#hero-section { position: relative; overflow: hidden; min-height: 100vh; }
+#hero-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.hero-content { position: relative; z-index: 2; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 0 60px; padding-top: 80px; }
+.hero-tag { display: inline-flex; align-items: center; gap: 12px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; margin-bottom: 32px; opacity: 0; animation: fadeUp .8s .3s ease forwards; }
+.hero-tag::before { content: ''; width: 40px; height: 1px; background: var(--gold); }
+.hero-h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(56px, 8vw, 110px); font-weight: 300; line-height: 0.95; opacity: 0; animation: fadeUp .9s .5s ease forwards; }
+.hero-h1 em { font-style: italic; color: var(--gold); }
+.hero-h1 .outline { -webkit-text-stroke: 1px var(--white); color: transparent; }
+.hero-sub { max-width: 440px; font-family: 'Cormorant Garamond', serif; font-size: 20px; line-height: 1.7; color: var(--muted); margin-top: 36px; opacity: 0; animation: fadeUp .9s .7s ease forwards; }
+.hero-btns { display: flex; gap: 20px; align-items: center; margin-top: 48px; opacity: 0; animation: fadeUp .9s .9s ease forwards; flex-wrap: wrap; }
+.hero-stats { display: flex; gap: 60px; margin-top: 80px; opacity: 0; animation: fadeUp .9s 1.1s ease forwards; flex-wrap: wrap; }
+.stat-item h3 { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 300; color: var(--gold); }
+.stat-item p { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-top: 4px; }
+.hero-scroll { position: absolute; bottom: 40px; left: 60px; display: flex; align-items: center; gap: 16px; z-index: 2; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; opacity: 0; animation: fadeUp .9s 1.3s ease forwards; }
+.scroll-line { width: 1px; height: 60px; background: linear-gradient(to bottom, var(--gold), transparent); animation: scrollPulse 2s ease infinite; }
+@keyframes scrollPulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(40px)} to{opacity:1;transform:translateY(0)} }
+
+/* WORKS STRIP */
+.works-section { background: var(--dark); }
+.works-strip { display: flex; gap: 24px; margin-top: 60px; overflow-x: auto; padding-bottom: 20px; }
+.works-strip::-webkit-scrollbar { height: 2px; }
+.works-strip::-webkit-scrollbar-thumb { background: var(--gold); }
+.work-item { flex: 0 0 400px; height: 280px; background: var(--card); border: 1px solid rgba(255,255,255,.06); position: relative; overflow: hidden; cursor: none; }
+.work-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.9), transparent); display: flex; flex-direction: column; justify-content: flex-end; padding: 28px; opacity: 0; transition: opacity .3s; }
+.work-item:hover .work-overlay { opacity: 1; }
+.work-bg { position: absolute; inset: 0; transition: transform .5s; display: flex; align-items: center; justify-content: center; font-size: 80px; opacity: .35; }
+.work-item:hover .work-bg { transform: scale(1.08); }
+.work-cat { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+.work-item h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; }
+.bg1 { background: linear-gradient(135deg,#1a0a2e,#2d1b4e); }
+.bg2 { background: linear-gradient(135deg,#0a1a0a,#1a3a1a); }
+.bg3 { background: linear-gradient(135deg,#1a0a0a,#3a1515); }
+.bg4 { background: linear-gradient(135deg,#0a0a1a,#151530); }
+.bg5 { background: linear-gradient(135deg,#1a1510,#3a2d1a); }
+
+@media(max-width:900px){
+  .hero-content { padding: 0 24px; padding-top: 100px; }
+  .hero-scroll { left: 24px; }
+  .hero-stats { gap: 32px; }
+  .work-item { flex: 0 0 300px; height: 220px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div class="loader" id="loader">
+  <div class="loader-logo">Lens<span>Forge</span></div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursorFollower"></div>
+
+<!-- WHATSAPP FLOAT -->
+<a class="wa-float" href="https://wa.me/919876543210?text=Hi%20LensForge!%20I%20want%20to%20discuss%20a%20project." target="_blank" aria-label="Chat on WhatsApp">
+  <div class="wa-circle">
+    <div class="wa-pulse"></div>
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </div>
+  <div class="wa-label">Chat with us!</div>
+</a>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="index.html" class="logo">Lens<span>Forge</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="work.html">Work</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta">Get a Quote</a>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section id="hero-section">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-tag">Premium Visual Studio</div>
+    <h1 class="hero-h1">
+      We <em>Craft</em><br>
+      Visual <span class="outline">Stories</span><br>
+      That <em>Convert</em>
+    </h1>
+    <p class="hero-sub">Award-winning camera work & strategic marketing that transforms brands into movements.</p>
+    <div class="hero-btns">
+      <a href="contact.html" class="btn-primary">Start a Project</a>
+      <a href="work.html" class="btn-outline">View Our Work</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item"><h3>320+</h3><p>Projects Done</p></div>
+      <div class="stat-item"><h3>8+</h3><p>Years Active</p></div>
+      <div class="stat-item"><h3>94%</h3><p>Client Retained</p></div>
+    </div>
+  </div>
+  <div class="hero-scroll"><div class="scroll-line"></div>Scroll to explore</div>
+</section>
+
+<!-- ===== SERVICES ===== -->
+<section class="section" style="background:var(--dark);">
+  <div class="section-tag reveal">Our Expertise</div>
+  <h2 class="section-title reveal reveal-delay-1">What We <em>Do</em><br>Exceptionally Well</h2>
+  <div class="services-grid">
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-num">01</div>
+      <div class="service-icon">📷</div>
+      <h3>Commercial Photography</h3>
+      <p>Product, lifestyle & brand photography that makes your audience feel before they think. Every frame tells your story.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-num">02</div>
+      <div class="service-icon">🎬</div>
+      <h3>Video Production</h3>
+      <p>From concept to final cut — cinematic brand films, reels, and campaign videos engineered for virality and impact.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <div class="service-num">03</div>
+      <div class="service-icon">📣</div>
+      <h3>Digital Marketing</h3>
+      <p>Performance-first social campaigns, paid media strategy, and content marketing that drives measurable ROI.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-num">04</div>
+      <div class="service-icon">🎯</div>
+      <h3>Brand Identity</h3>
+      <p>Strategic visual identity systems — logos, palettes, typography, and guidelines that build instant recognition.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-num">05</div>
+      <div class="service-icon">✨</div>
+      <h3>Creative Direction</h3>
+      <p>End-to-end creative direction for launches, campaigns, and events. We handle the vision so you focus on growth.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <div class="service-num">06</div>
+      <div class="service-icon">🌐</div>
+      <h3>Social Media Management</h3>
+      <p>Daily content creation, community management, and growth strategy tailored to Indian digital audiences.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== RECENT WORK ===== -->
+<section class="section works-section">
+  <div class="section-tag reveal">Selected Work</div>
+  <h2 class="section-title reveal reveal-delay-1">Recent <em>Projects</em></h2>
+  <div class="works-strip reveal reveal-delay-2">
+    <div class="work-item">
+      <div class="work-bg bg1">📷</div>
+      <div class="work-overlay"><div class="work-cat">Commercial</div><h3>NovaSkin Product Campaign</h3></div>
+    </div>
+    <div class="work-item">
+      <div class="work-bg bg2">🎬</div>
+      <div class="work-overlay"><div class="work-cat">Film</div><h3>GreenEarth Brand Film</h3></div>
+    </div>
+    <div class="work-item">
+      <div class="work-bg bg3">🎯</div>
+      <div class="work-overlay"><div class="work-cat">Marketing</div><h3>Axis Bank Digital Drive</h3></div>
+    </div>
+    <div class="work-item">
+      <div class="work-bg bg4">✨</div>
+      <div class="work-overlay"><div class="work-cat">Identity</div><h3>MiloTech Brand Refresh</h3></div>
+    </div>
+    <div class="work-item">
+      <div class="work-bg bg5">📣</div>
+      <div class="work-overlay"><div class="work-cat">Social</div><h3>Taavi Jewels Social</h3></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<div class="cta-strip">
+  <div>
+    <p class="cta-strip-sub">Ready to transform your brand?</p>
+    <h2>Let's Create Something<br><em>Extraordinary</em></h2>
+  </div>
+  <a href="contact.html" class="btn-primary" style="background:var(--black);color:var(--white);flex-shrink:0;">Book a Call Today</a>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">Lens<span>Forge</span></a>
+      <p>Premium camera work & digital marketing studio crafting visual stories that move people and grow brands.</p>
+      <div class="social-links">
+        <a class="social-link" title="Instagram">📸</a>
+        <a class="social-link" title="YouTube">▶️</a>
+        <a class="social-link" title="LinkedIn">💼</a>
+        <a class="social-link" title="Twitter">🐦</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#">Photography</a></li>
+        <li><a href="#">Video Production</a></li>
+        <li><a href="#">Digital Marketing</a></li>
+        <li><a href="#">Brand Identity</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="work.html">Our Work</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:hello@lensforge.in">hello@lensforge.in</a></li>
+        <li><a href="tel:+919876543210">+91 98765 43210</a></li>
+        <li><a href="#">Chennai, Tamil Nadu</a></li>
+        <li><a href="#">Mon–Sat: 9am–7pm</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 LensForge Studio. All rights reserved.</p>
+    <p>Crafted with precision & passion</p>
+  </div>
+</footer>
+
+<script>
+// LOADER
+window.addEventListener('load', () => {
+  setTimeout(() => { document.getElementById('loader').classList.add('gone'); initThreeJS(); initReveal(); }, 1800);
+});
+
+// NAV SCROLL
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// HAMBURGER
+function toggleMenu() {
+  document.getElementById('navbar').classList.toggle('menu-open');
+  document.getElementById('hamburger').classList.toggle('open');
+}
+
+// CURSOR
+const cursor = document.getElementById('cursor');
+const follower = document.getElementById('cursorFollower');
+let mx=0,my=0,fx=0,fy=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+(function animCursor(){
+  cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+  fx+=(mx-fx)*.12; fy+=(my-fy)*.12;
+  follower.style.left=fx+'px'; follower.style.top=fy+'px';
+  requestAnimationFrame(animCursor);
+})();
+document.querySelectorAll('a,button,.service-card,.work-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.classList.add('hover');follower.classList.add('hover');});
+  el.addEventListener('mouseleave',()=>{cursor.classList.remove('hover');follower.classList.remove('hover');});
+});
+
+// THREE.JS 3D CAMERA
+function initThreeJS() {
+  const canvas = document.getElementById('hero-canvas');
+  if (!canvas || !window.THREE) return;
+  if (canvas._renderer) { canvas._renderer.dispose(); }
+  const W = canvas.offsetWidth, H = canvas.offsetHeight;
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setSize(W, H);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  canvas._renderer = renderer;
+  const scene = new THREE.Scene();
+  const cam = new THREE.PerspectiveCamera(60, W/H, 0.1, 1000);
+  cam.position.set(0, 0, 6);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+  const dl = new THREE.DirectionalLight(0xc9a84c, 1.5); dl.position.set(3,3,5); scene.add(dl);
+  const rl = new THREE.DirectionalLight(0x4080ff, 0.5); rl.position.set(-4,-2,2); scene.add(rl);
+  const std = (c,m,r) => new THREE.MeshStandardMaterial({color:c,metalness:m,roughness:r});
+  const body = new THREE.Mesh(new THREE.BoxGeometry(3,2,1.6), std(0x111114,.9,.3)); 
+  const grip = new THREE.Mesh(new THREE.BoxGeometry(.7,1.8,1.8), std(0x1a1a1e,.8,.4)); grip.position.set(1.6,-.1,0);
+  const lensBar = new THREE.Mesh(new THREE.CylinderGeometry(.7,.75,1.4,32), std(0x0a0a0c,.95,.1)); lensBar.rotation.x=Math.PI/2; lensBar.position.set(-.4,.1,1.2);
+  const lensFront = new THREE.Mesh(new THREE.CircleGeometry(.55,32), new THREE.MeshStandardMaterial({color:0x0a1020,transparent:true,opacity:.85,roughness:0})); lensFront.position.set(-.4,.1,1.91);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(.65,.07,16,48), std(0xc9a84c,1,.1)); ring.position.set(-.4,.1,1.88);
+  const vf = new THREE.Mesh(new THREE.BoxGeometry(.7,.5,.5), std(0x0e0e11,.9,.3)); vf.position.set(-.2,1.2,.5);
+  const hs = new THREE.Mesh(new THREE.BoxGeometry(.6,.08,.6), std(0xc9a84c,1,.2)); hs.position.set(-.2,1.46,.5);
+  const grp = new THREE.Group(); grp.add(body,grip,lensBar,lensFront,ring,vf,hs);
+  grp.position.set(2.5,-.2,0); grp.rotation.y=-.3; scene.add(grp);
+  const partGeo = new THREE.BufferGeometry();
+  const pos = new Float32Array(600); for(let i=0;i<600;i++) pos[i]=(Math.random()-.5)*20;
+  partGeo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  const parts = new THREE.Points(partGeo, new THREE.PointsMaterial({color:0xc9a84c,size:.04,transparent:true,opacity:.6}));
+  scene.add(parts);
+  const tori = [];
+  for(let i=0;i<3;i++){
+    const t = new THREE.Mesh(new THREE.TorusGeometry(.4+i*.3,.02,8,32), new THREE.MeshStandardMaterial({color:0xc9a84c,metalness:1,roughness:.1,transparent:true,opacity:.2-i*.04}));
+    t.position.set(-3+i*1.5, 1.5-i, -1+i); t.rotation.x=Math.random()*Math.PI; scene.add(t); tori.push(t);
+  }
+  let tx=0,ty=0;
+  document.addEventListener('mousemove', e => { tx=(e.clientX/window.innerWidth-.5)*.4; ty=-(e.clientY/window.innerHeight-.5)*.3; });
+  let t=0;
+  (function animate(){
+    requestAnimationFrame(animate); t+=.01;
+    grp.rotation.y+=(tx*.8-grp.rotation.y)*.05;
+    grp.rotation.x+=(ty*.5-grp.rotation.x)*.05;
+    grp.position.y=-.2+Math.sin(t)*.15;
+    parts.rotation.y+=.001; parts.rotation.x+=.0005;
+    tori.forEach((tor,i)=>{ tor.rotation.x+=.005+i*.003; tor.rotation.y+=.008+i*.002; tor.position.y+=Math.sin(t+i)*.004; });
+    renderer.render(scene,cam);
+  })();
+  window.addEventListener('resize', () => { const w=canvas.offsetWidth,h=canvas.offsetHeight; renderer.setSize(w,h); cam.aspect=w/h; cam.updateProjectionMatrix(); });
+}
+
+// REVEAL
+function initReveal() {
+  const obs = new IntersectionObserver(entries => { entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); }); }, {threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el => { el.classList.remove('visible'); obs.observe(el); });
+}
+initReveal();
+</script>
+</body>
+</html>

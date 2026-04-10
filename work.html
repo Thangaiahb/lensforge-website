@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Work & Testimonials — LensForge Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+/* WORK PAGE */
+.work-hero { padding: 160px 60px 80px; text-align: center; border-bottom: 1px solid rgba(255,255,255,.06); }
+.work-hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(44px,6vw,90px); font-weight: 300; line-height: 1.0; }
+.work-hero h1 em { font-style: italic; color: var(--gold); }
+.work-hero p { font-family: 'Cormorant Garamond', serif; font-size: 21px; color: var(--muted); margin-top: 20px; max-width: 560px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+
+/* FILTER TABS */
+.filter-tabs { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; padding: 40px 60px; }
+.filter-tab { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; padding: 10px 24px; background: transparent; border: 1px solid rgba(255,255,255,.1); color: var(--muted); cursor: none; transition: all .3s; }
+.filter-tab:hover, .filter-tab.active { background: var(--gold); color: var(--black); border-color: var(--gold); }
+
+/* PROJECTS MASONRY */
+.projects-section { padding: 0 60px 100px; }
+.proj-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 24px; margin-top: 20px; }
+.proj-card { background: var(--card); border: 1px solid rgba(255,255,255,.06); overflow: hidden; cursor: none; transition: all .4s; position: relative; }
+.proj-card:hover { transform: translateY(-6px); border-color: var(--gold-dim); box-shadow: 0 24px 60px rgba(0,0,0,.4); }
+.proj-card.wide { grid-column: 1/-1; }
+.proj-card-top { height: 220px; display: flex; align-items: center; justify-content: center; font-size: 64px; position: relative; overflow: hidden; }
+.proj-card.wide .proj-card-top { height: 300px; }
+.proj-card-top::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,.25); }
+.proj-card-body { padding: 32px 36px; }
+.proj-tag { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; margin-bottom: 12px; }
+.proj-card-body h3 { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; margin-bottom: 12px; }
+.proj-card-body p { font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--muted); line-height: 1.6; }
+.proj-results { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+.proj-result-item h5 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--gold); }
+.proj-result-item span { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+.proj-link { display: inline-flex; align-items: center; gap: 8px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; text-decoration: none; margin-top: 20px; cursor: none; transition: gap .3s; }
+.proj-link:hover { gap: 14px; }
+.p1 { background: linear-gradient(135deg,#1a0a2e,#3d1f5e); }
+.p2 { background: linear-gradient(135deg,#0a1a0a,#1e3a1e); }
+.p3 { background: linear-gradient(135deg,#1a0a0a,#3a1010); }
+.p4 { background: linear-gradient(135deg,#0a0f1a,#1a2540); }
+.p5 { background: linear-gradient(135deg,#1a1510,#3a2d1a); }
+.p6 { background: linear-gradient(135deg,#0a1a18,#1a3a34); }
+
+/* BIG QUOTE */
+.big-quote-section { padding: 100px 60px; background: var(--dark); text-align: center; border-top: 1px solid rgba(255,255,255,.06); border-bottom: 1px solid rgba(255,255,255,.06); }
+.quote-mark { font-family: 'Cormorant Garamond', serif; font-size: 140px; line-height: .6; color: var(--gold); opacity: .25; }
+.big-quote-section blockquote { font-family: 'Cormorant Garamond', serif; font-size: clamp(22px,3vw,38px); font-weight: 300; line-height: 1.5; max-width: 900px; margin: 0 auto 32px; font-style: italic; }
+.big-quote-section cite { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; font-style: normal; }
+
+/* TESTIMONIALS */
+.test-section { padding: 100px 60px; }
+.test-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 48px; }
+.test-card { background: var(--card); border: 1px solid rgba(255,255,255,.04); padding: 40px; transition: all .3s; }
+.test-card:hover { background: #15151c; transform: translateY(-4px); }
+.stars { color: var(--gold); font-size: 14px; letter-spacing: 4px; margin-bottom: 20px; }
+.test-card blockquote { font-family: 'Cormorant Garamond', serif; font-size: 18px; line-height: 1.7; color: var(--muted); margin-bottom: 28px; font-style: italic; }
+.test-author { display: flex; align-items: center; gap: 16px; }
+.test-avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--dark); border: 1px solid rgba(201,168,76,.2); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.test-author-info h5 { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+.test-author-info span { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 1px; }
+
+/* BRANDS STRIP */
+.brands-section { padding: 60px; background: var(--dark); border-top: 1px solid rgba(255,255,255,.06); text-align: center; }
+.brands-title { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; margin-bottom: 40px; }
+.brands-strip { display: flex; gap: 0; overflow-x: auto; }
+.brand-item { flex: 0 0 200px; padding: 24px; border-right: 1px solid rgba(255,255,255,.06); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.brand-item:last-child { border: none; }
+.brand-icon { font-size: 28px; }
+.brand-item span { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+
+@media(max-width:900px){
+  .work-hero { padding: 140px 24px 60px; }
+  .filter-tabs { padding: 30px 24px; }
+  .projects-section { padding: 0 24px 60px; }
+  .proj-grid { grid-template-columns: 1fr; }
+  .proj-card.wide { grid-column: auto; }
+  .big-quote-section { padding: 60px 24px; }
+  .test-section { padding: 60px 24px; }
+  .test-grid { grid-template-columns: 1fr; gap: 2px; }
+  .brands-section { padding: 40px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div class="loader" id="loader">
+  <div class="loader-logo">Lens<span>Forge</span></div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursorFollower"></div>
+
+<!-- WHATSAPP FLOAT -->
+<a class="wa-float" href="https://wa.me/919876543210?text=Hi%20LensForge!%20I%20want%20to%20discuss%20a%20project." target="_blank" aria-label="Chat on WhatsApp">
+  <div class="wa-circle">
+    <div class="wa-pulse"></div>
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </div>
+  <div class="wa-label">Chat with us!</div>
+</a>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="index.html" class="logo">Lens<span>Forge</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="work.html" class="active">Work</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta">Get a Quote</a>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="work-hero">
+  <div class="section-tag" style="justify-content:center;">Portfolio & Reviews</div>
+  <h1>Our <em>Work</em> &<br>Client Stories</h1>
+  <p>Real results from real brands. Every project here is a story of creative partnership and measurable growth.</p>
+</section>
+
+<!-- FILTER TABS -->
+<div class="filter-tabs">
+  <button class="filter-tab active" onclick="filterWork(this,'all')">All Work</button>
+  <button class="filter-tab" onclick="filterWork(this,'photo')">Photography</button>
+  <button class="filter-tab" onclick="filterWork(this,'video')">Video</button>
+  <button class="filter-tab" onclick="filterWork(this,'marketing')">Marketing</button>
+  <button class="filter-tab" onclick="filterWork(this,'brand')">Branding</button>
+</div>
+
+<!-- PROJECTS -->
+<section class="projects-section">
+  <div class="proj-grid" id="projGrid">
+
+    <div class="proj-card reveal reveal-delay-1" data-cat="photo">
+      <div class="proj-card-top p1"><span style="position:relative;z-index:1">📷</span></div>
+      <div class="proj-card-body">
+        <div class="proj-tag">Commercial Photography</div>
+        <h3>NovaSkin Product Campaign</h3>
+        <p>Full product photography suite and social campaign for a D2C skincare brand. Complete visual overhaul from packaging to lifestyle.</p>
+        <div class="proj-results">
+          <div class="proj-result-item"><h5>38%</h5><span>Sales Lift</span></div>
+          <div class="proj-result-item"><h5>2.1M</h5><span>Impressions</span></div>
+        </div>
+        <a class="proj-link" href="contact.html">View Project →</a>
+      </div>
+    </div>
+
+    <div class="proj-card reveal reveal-delay-2" data-cat="video">
+      <div class="proj-card-top p2"><span style="position:relative;z-index:1">🎬</span></div>
+      <div class="proj-card-body">
+        <div class="proj-tag">Brand Film</div>
+        <h3>GreenEarth Brand Story</h3>
+        <p>Cinematic 3-minute brand story for a clean-energy startup. Shot across 5 locations in Tamil Nadu over 3 days.</p>
+        <div class="proj-results">
+          <div class="proj-result-item"><h5>2L+</h5><span>Organic Views</span></div>
+          <div class="proj-result-item"><h5>3x</h5><span>Brand Recall</span></div>
+        </div>
+        <a class="proj-link" href="contact.html">View Project →</a>
+      </div>
+    </div>
+
+    <div class="proj-card wide reveal" data-cat="marketing">
+      <div class="proj-card-top p3" style="height:260px;"><span style="position:relative;z-index:1">📣</span></div>
+      <div class="proj-card-body">
+        <div class="proj-tag">Digital Marketing Campaign</div>
+        <h3>Axis Bank — Digital Drive 2024</h3>
+        <p>End-to-end digital content strategy and execution across Instagram, YouTube and LinkedIn. Quarterly brand awareness campaign with custom animated content, reels, and paid media management for one of India's largest private banks.</p>
+        <div class="proj-results">
+          <div class="proj-result-item"><h5>5M+</h5><span>Impressions</span></div>
+          <div class="proj-result-item"><h5>6 Wks</h5><span>Campaign Duration</span></div>
+          <div class="proj-result-item"><h5>240%</h5><span>Engagement Growth</span></div>
+        </div>
+        <a class="proj-link" href="contact.html">View Full Case Study →</a>
+      </div>
+    </div>
+
+    <div class="proj-card reveal reveal-delay-1" data-cat="brand">
+      <div class="proj-card-top p4"><span style="position:relative;z-index:1">✨</span></div>
+      <div class="proj-card-body">
+        <div class="proj-tag">Brand Identity + Social</div>
+        <h3>Taavi Jewels Rebrand</h3>
+        <p>Complete visual identity overhaul for a heritage jewellery brand going D2C. Logo, packaging, social templates, and photography system.</p>
+        <div class="proj-results">
+          <div class="proj-result-item"><h5>480%</h5><span>Follower Growth</span></div>
+          <div class="proj-result-item"><h5>1 Qtr</h5><span>Timeline</span></div>
+        </div>
+        <a class="proj-link" href="contact.html">View Project →</a>
+      </div>
+    </div>
+
+    <div class="proj-card reveal reveal-delay-2" data-cat="video">
+      <div class="proj-card-top p5"><span style="position:relative;z-index:1">🎯</span></div>
+      <div class="proj-card-body">
+        <div class="proj-tag">Product Launch Film</div>
+        <h3>ZeroCarbon Bikes Launch</h3>
+        <p>High-octane product launch video and social content series for an EV startup's first bike. Directed, shot, and edited in-house.</p>
+        <div class="proj-results">
+          <div class="proj-result-item"><h5>500K</h5><span>Views in 7 Days</span></div>
+          <div class="proj-result-item"><h5>#1</h5><span>Trending on LinkedIn</span></div>
+        </div>
+        <a class="proj-link" href="contact.html">View Project →</a>
+      </div>
+    </div>
+
+    <div class="proj-card reveal reveal-delay-1" data-cat="photo">
+      <div class="proj-card-top p6"><span style="position:relative;z-index:1">🌿</span></div>
+      <div class="proj-card-body">
+        <div class="proj-tag">Food & Lifestyle Photography</div>
+        <h3>Spice Route Restaurant Chain</h3>
+        <p>Full menu photography and ambience shoots for 6 restaurant locations. Created a cohesive visual identity across all outlets.</p>
+        <div class="proj-results">
+          <div class="proj-result-item"><h5>60%</h5><span>More Online Orders</span></div>
+          <div class="proj-result-item"><h5>6</h5><span>Locations Covered</span></div>
+        </div>
+        <a class="proj-link" href="contact.html">View Project →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BIG QUOTE -->
+<section class="big-quote-section">
+  <div class="quote-mark">"</div>
+  <blockquote>LensForge didn't just take photos — they captured the soul of our brand. Our product sales increased 38% in the month after the campaign launched. This team is extraordinary.</blockquote>
+  <cite>— Kavitha Rajan, CMO · NovaSkin Cosmetics</cite>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="test-section">
+  <div class="section-tag reveal">Client Reviews</div>
+  <h2 class="section-title reveal reveal-delay-1">What Our <em>Clients</em> Say</h2>
+  <div class="test-grid">
+    <div class="test-card reveal reveal-delay-1">
+      <div class="stars">★★★★★</div>
+      <blockquote>"The brand film they made for our restaurant chain was beyond what we imagined. Within a week it got 2 lakh views organically. Absolutely incredible team."</blockquote>
+      <div class="test-author">
+        <div class="test-avatar">👨</div>
+        <div class="test-author-info"><h5>Rajesh Menon</h5><span>Founder · Spice Route Restaurants</span></div>
+      </div>
+    </div>
+    <div class="test-card reveal reveal-delay-2">
+      <div class="stars">★★★★★</div>
+      <blockquote>"We hired them for a product launch campaign. The social content performed 3x better than our previous agency. Their strategy is sharp and their visuals are stunning."</blockquote>
+      <div class="test-author">
+        <div class="test-avatar">👩</div>
+        <div class="test-author-info"><h5>Ananya Nair</h5><span>Marketing Head · StyleX Fashion</span></div>
+      </div>
+    </div>
+    <div class="test-card reveal reveal-delay-3">
+      <div class="stars">★★★★★</div>
+      <blockquote>"Extremely professional from the first brief to final delivery. Communication was seamless and the work exceeded our expectations every single time. Highly recommend!"</blockquote>
+      <div class="test-author">
+        <div class="test-avatar">👨‍💼</div>
+        <div class="test-author-info"><h5>Vikram Sundaram</h5><span>CEO · BuildSmart PropTech</span></div>
+      </div>
+    </div>
+    <div class="test-card reveal reveal-delay-1">
+      <div class="stars">★★★★★</div>
+      <blockquote>"We've been working with LensForge for two years now and they consistently raise the bar. True creative partners who genuinely care about our growth."</blockquote>
+      <div class="test-author">
+        <div class="test-avatar">👩‍💼</div>
+        <div class="test-author-info"><h5>Deepa Krishnan</h5><span>Brand Manager · HerbalPlus</span></div>
+      </div>
+    </div>
+    <div class="test-card reveal reveal-delay-2">
+      <div class="stars">★★★★★</div>
+      <blockquote>"They handle our entire Instagram presence. Engagement is up 240% year on year. Worth every rupee and more. If you're serious about your brand, hire LensForge."</blockquote>
+      <div class="test-author">
+        <div class="test-avatar">🧑</div>
+        <div class="test-author-info"><h5>Siddharth Rao</h5><span>Founder · ZeroCarbon Bikes</span></div>
+      </div>
+    </div>
+    <div class="test-card reveal reveal-delay-3">
+      <div class="stars">★★★★★</div>
+      <blockquote>"Our wedding film was pure magic. The team was invisible during the day yet captured every beautiful moment. We've watched it over 100 times. An absolute treasure."</blockquote>
+      <div class="test-author">
+        <div class="test-avatar">👰</div>
+        <div class="test-author-info"><h5>Preethi & Karthik</h5><span>Client · Wedding Film</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDS -->
+<section class="brands-section">
+  <div class="brands-title">Trusted by 320+ brands across India</div>
+  <div class="brands-strip">
+    <div class="brand-item"><div class="brand-icon">🏦</div><span>Axis Bank</span></div>
+    <div class="brand-item"><div class="brand-icon">💄</div><span>NovaSkin</span></div>
+    <div class="brand-item"><div class="brand-icon">🌱</div><span>GreenEarth</span></div>
+    <div class="brand-item"><div class="brand-icon">💎</div><span>Taavi Jewels</span></div>
+    <div class="brand-item"><div class="brand-icon">⚡</div><span>ZeroCarbon</span></div>
+    <div class="brand-item"><div class="brand-icon">🍽</div><span>Spice Route</span></div>
+    <div class="brand-item"><div class="brand-icon">👗</div><span>StyleX</span></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-strip">
+  <div>
+    <p class="cta-strip-sub">Your brand could be next</p>
+    <h2>Ready to Join Our <em>Success Stories?</em></h2>
+  </div>
+  <a href="contact.html" class="btn-primary" style="background:var(--black);color:var(--white);flex-shrink:0;">Start Your Project</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">Lens<span>Forge</span></a>
+      <p>Premium camera work & digital marketing studio crafting visual stories that move people and grow brands.</p>
+      <div class="social-links"><a class="social-link">📸</a><a class="social-link">▶️</a><a class="social-link">💼</a><a class="social-link">🐦</a></div>
+    </div>
+    <div class="footer-col"><h4>Services</h4><ul><li><a href="#">Photography</a></li><li><a href="#">Video Production</a></li><li><a href="#">Digital Marketing</a></li><li><a href="#">Brand Identity</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="about.html">About Us</a></li><li><a href="work.html">Our Work</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul><li><a href="mailto:hello@lensforge.in">hello@lensforge.in</a></li><li><a href="tel:+919876543210">+91 98765 43210</a></li><li><a href="#">Chennai, Tamil Nadu</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2025 LensForge Studio. All rights reserved.</p><p>Crafted with precision & passion</p></div>
+</footer>
+
+<script>
+window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('loader').classList.add('gone');initReveal();},1800);});
+window.addEventListener('scroll',()=>{document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60);});
+function toggleMenu(){document.getElementById('navbar').classList.toggle('menu-open');document.getElementById('hamburger').classList.toggle('open');}
+const cursor=document.getElementById('cursor'),follower=document.getElementById('cursorFollower');
+let mx=0,my=0,fx=0,fy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function a(){cursor.style.left=mx+'px';cursor.style.top=my+'px';fx+=(mx-fx)*.12;fy+=(my-fy)*.12;follower.style.left=fx+'px';follower.style.top=fy+'px';requestAnimationFrame(a);})();
+document.querySelectorAll('a,button,.proj-card,.test-card,.filter-tab').forEach(el=>{el.addEventListener('mouseenter',()=>{cursor.classList.add('hover');follower.classList.add('hover');});el.addEventListener('mouseleave',()=>{cursor.classList.remove('hover');follower.classList.remove('hover');});});
+
+function filterWork(btn, cat) {
+  document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.proj-card').forEach(card => {
+    if (cat === 'all' || card.dataset.cat === cat) {
+      card.style.display = '';
+      setTimeout(()=>{card.style.opacity='1';card.style.transform='';},10);
+    } else {
+      card.style.opacity='0';
+      card.style.transform='translateY(20px)';
+      setTimeout(()=>{card.style.display='none';},300);
+    }
+  });
+}
+
+function initReveal(){const obs=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.1});document.querySelectorAll('.reveal').forEach(el=>{el.classList.remove('visible');obs.observe(el);});}
+initReveal();
+</script>
+</body>
+</html>
